@@ -1,0 +1,3 @@
+[submodule "public/miller"]
+	path = public/miller
+	url = https://github.com/dsharew/responsive-miller-column.git

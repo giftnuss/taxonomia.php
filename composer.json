@@ -1,0 +1,24 @@
+{
+    "name": "giftnuss/taxonomia.php",
+    "description": "taxonomies of my book shelf",
+    "type": "project",
+    "require-dev": {
+        "phpunit/phpunit": "4.8",
+        "giftnuss/test.php": "dev-master"
+    },
+    "license": "BSD-3",
+    "authors": [
+        {
+            "name": "Mike Würfel",
+            "email": "news@young-workers.de"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "slim/slim": "^3.0",
+        "giftnuss/siox-db": "dev-master",
+        "league/flysystem": "^1.1@dev",
+        "apix/log": "dev-master",
+        "slim/php-view": "dev-master"
+    }
+}
