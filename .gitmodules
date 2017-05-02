@@ -1,3 +1,6 @@
 [submodule "public/miller"]
 	path = public/miller
 	url = https://github.com/dsharew/responsive-miller-column.git
+[submodule "public/wordcloud2"]
+	path = public/wordcloud2
+	url = https://github.com/timdream/wordcloud2.js.git

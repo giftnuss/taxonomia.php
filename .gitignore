@@ -1,5 +1,7 @@
 *~
 */.git
+logs/
+app/data/
 # Created by https://www.gitignore.io/api/composer
 ### Composer ###
 composer.phar

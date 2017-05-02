@@ -15,5 +15,12 @@ return [
             'path' => __DIR__ . '/../../logs/app.log',
             'level' => 'debug',
         ],
+        'db' =>[
+            'driver' => 'dsn',
+            'dsn' => 'sqlite:' . dirname(__DIR__) . '/data/taxonomia.sqlite'
+        ],
+        'shelf' =>[
+            'rootdir' => '/home/buecher'
+        ]
     ],
 ];
