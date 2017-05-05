@@ -12,7 +12,7 @@ $db = Siox\Db::factory(array(
 isa_ok($db, 'Siox\\Db');
 
 $setup = new Taxonomia\Setup($db);
-$setup->init();
+$setup->init(function () {});
 
 $model = $setup->getModel();
 isa_ok($model->orm, 'Siox\\Db\\Orm', 'orm');

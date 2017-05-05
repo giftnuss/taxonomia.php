@@ -51,10 +51,9 @@ class Schema extends Base
         $model = new Model($db, $this);
         $opposite = $model->concept('is opposite of');
         $model->triple(
-            $model->concept('is concept of term'),
-            $opposite,
-            $model->concept('uses concept')
-        );
+            $model->concept('is concept of term'),$opposite,
+            $model->concept('uses concept'));
+
         $language = $model->concept('in language');
         $german = $model->concept('german');
         $english = $model->concept('english');
@@ -68,5 +67,13 @@ class Schema extends Base
         $model->concept('document');
         $model->concept('folder');
         $model->concept('file');
+
+        $model->triple($model->concept('contains'),$opposite,
+            $model->concept('is contained in'));
+
+        # URI-Path is build of segments
+        $model->triple(
+            $model->concept('is segment in'),$opposite,
+            $model->concept('has segment'));
     }
 }

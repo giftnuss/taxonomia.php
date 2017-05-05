@@ -35,11 +35,26 @@ class Setup
     {
         $model = $this->getModel();
         $isa = $model->concept("is a");
-        $folder = $model->concept("folder");
-        foreach($shelf->listRootDirs() as $word) {
-            $term = $model->term($word,1);
-            $model->triple($term,$isa,$folder);
-        }
+        $folderconcept = $model->concept("folder");
+        $contains = $model->concept("contains");
+        $segment = $model->concept("is segment in");
+
+        $shelf->collectFolders(function ($shelf,$folder)
+            use ($model,$isa,$folderconcept,$contains,$segment)
+        {
+            $uri = $model->uri($shelf->makeUri($folder));
+            $model->triple($uri,$isa,$folderconcept);
+            if($folder['dirname']) {
+                $pf = array(
+                    'path' => dirname($folder['path']),
+                    'type' => 'dir'
+                );
+                $parent = $model->uri($shelf->makeUri($pf));
+                $model->triple($parent,$contains,$uri);
+            }
+
+            $model->triple(['term' => $folder['filename']],$segment,$uri);
+        });
     }
 
     public function getModel()

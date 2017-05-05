@@ -26,4 +26,21 @@ class Shelf
         }
         return $result;
     }
+
+    public function collectFolders(callable $func)
+    {
+        $contents = $this->fs->listContents('',true);
+        foreach($contents as $entry) {
+            if($entry['type'] === 'file' ||
+               strstr($entry['path'],'.git') === $entry['path']) continue;
+            $func($this,$entry);
+        }
+    }
+
+    public function makeUri($entry)
+    {
+        $uri = sprintf("shelf:///%s%s",$entry['path'],
+            ($entry['type'] === 'dir' ? '/' : ''));
+        return $uri;
+    }
 }

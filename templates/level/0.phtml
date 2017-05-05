@@ -1,0 +1,24 @@
+<?php
+
+use Taxonomia\Model\Category;
+use Taxonomia\Model\CategoryItem;
+
+$category = new Category();
+
+$category->setId(1);
+$category->setName("Wurzel");
+$category->isLowestLevel(true);
+
+$model->searchTriples(
+   ['p' => ['concept' => 'is a'],'o' => ['concept' => 'language']],
+   function ($row) use ($model,$category) {
+       $item = new CategoryItem();
+       $item->setId($row['id']);
+       $item->setName($model->getConcept($row['s']));
+
+       $category->addItem($item);
+   });
+
+echo json_encode($category,JSON_PRETTY_PRINT);
+
+return;

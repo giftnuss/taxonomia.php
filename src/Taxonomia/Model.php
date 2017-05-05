@@ -9,12 +9,25 @@ class Model
     protected $schema;
     public $orm;
 
+    protected $unique = array('concept','uri');
+    protected $ambiguous = array('description','note','term');
+
     public function __construct($db, $schema)
     {
         $this->db = $db;
         $this->sql = $db->sql();
         $this->schema = $schema;
         $this->orm = $db->orm($schema);
+    }
+
+    protected function isUniqueIndex($name)
+    {
+        return in_array($name,$this->unique);
+    }
+
+    protected function isAmbiguousIndex($name)
+    {
+        return in_array($name,$this->ambiguous);
     }
 
     public function __call($name,$args)
@@ -24,8 +37,6 @@ class Model
             return $this->get($name,$args);
         }
 
-        $unique = array('concept','uri');
-
         $ct = $this->orm->table($name);
         $qr = $this->orm->query($ct);
         $id = null;
@@ -34,7 +45,7 @@ class Model
         $word = array_shift($args);
         $isunique = isset($args[0]) && $args[0];
 
-        if(in_array($name,$unique) || $isunique) {
+        if($this->isUniqueIndex($name) || $isunique) {
             $qr->if_not(array($name => $word),function ($sql,$table)
                 use ($it,$ct,$word,&$id,$name) {
                 $sql->insert($it,array('id' => null));
@@ -43,6 +54,12 @@ class Model
             }, function ($row) use (&$id) {
                 $id = $row['id'];
             });
+            return $id;
+        }
+        if($this->isAmbiguousIndex($name)) {
+            $this->sql->insert($it,array('id' => null));
+            $id = $this->sql->lastInsertId('id');
+            $this->sql->insert($ct,array('id' => $id,$name => $word));
             return $id;
         }
 
@@ -61,37 +78,92 @@ class Model
         return $result;
     }
 
-    public function term2($word)
-    {
-        $ct = $this->orm->table('term');
-        $qr = $this->orm->query($ct);
-        $id = null;
-        $it = $this->orm->table('id');
-        $qr->if_not(array('term' => $word),function ($sql,$table)
-            use ($it,$ct,$word,&$id) {
-            $sql->insert($it,array('id' => null));
-            $id = $sql->lastInsertId('id');
-            $sql->insert($ct,array('id' => $id,'concept' => $word));
-        }, function ($row) use (&$id) {
-            $id = $row['id'];
-        });
-        return $id;
-    }
-
-    public function triple(int $s,int $p,int $o)
+    public function triple($s,$p,$o)
     {
         $tr = $this->orm->table('triple');
         $it = $this->orm->table('id');
         $qr = $this->orm->query($tr);
         $id = null;
-        $qr->if_not(array('s' => $s,'p' => $p,'o' => $o),
-           function ($sql,$table) use ($tr,$it,&$id,$s,$p,$o) {
-              $sql->insert($it,array('id' => null));
-              $id = $sql->lastInsertId('id');
-              $sql->insert($tr,array('id' => $id,'s' => $s,'p' => $p,'o' => $o));
-        }, function ($row) use (&$id) {
-            $id = $row['id'];
-        });
-        return $id;
+        $args = array('s' => $s,'p' => $p,'o' => $o);
+        $lookup = array('count' => 0);
+        foreach($args as $k => $v) {
+            if(is_array($v)) {
+                $keys = array_keys($v);
+                $key = array_shift($keys);
+                $val = $v[$key];
+                if($this->isUniqueIndex($key)) {
+                    $args[$k] = $this->$key($val);
+                }
+                else {
+                    $lookup['count']++;
+                    $lookup['key'] = $key;
+                    $lookup['val'] = $val;
+                    $lookup['what'] = $k;
+                }
+            }
+        }
+
+        if($lookup['count'] === 0) {
+           $qr->if_not($args,
+               function ($sql,$table) use ($tr,$it,&$id,$s,$p,$o) {
+                   $sql->insert($it,array('id' => null));
+                   $id = $sql->lastInsertId('id');
+                   $sql->insert($tr,array('id' => $id,'s' => $s,'p' => $p,'o' => $o));
+           }, function ($row) use (&$id) {
+                   $id = $row['id'];
+           });
+           return $id;
+        }
+        elseif($lookup['count'] === 1) {
+           $what = $lookup['what'];
+           $searchargs = array();
+           if($what !== 's') $searchargs['s'] = $args['s'];
+           if($what !== 'p') $searchargs['p'] = $args['p'];
+           if($what !== 'o') $searchargs['o'] = $args['o'];
+           $qr->if_not($searchargs,
+              function ($sql,$table) use ($lookup,$it,$tr,&$id,$searchargs) {
+                 $searchargs[$lookup['what']] = $this->{$lookup['key']}($lookup['val']);
+                 $sql->insert($it,array('id' => null));
+                 $id = $sql->lastInsertId('id');
+
+                 $sql->insert($tr,array('id' => $id,
+                     's' => $searchargs['s'],
+                     'p' => $searchargs['p'],
+                     'o' => $searchargs['o']));
+           }, function ($row) use ($lookup) {
+                 $lookupid = $row[$lookup['what']];
+                 throw new \Exception("TODO - known lookup");
+           });
+           return $id;
+        }
+    }
+
+    public function searchTriples($args,callable $action)
+    {
+        $tr = $this->orm->table('triple');
+        $qr = $this->orm->query($tr);
+
+        foreach($args as $k => $v) {
+            if(is_array($v)) {
+                $keys = array_keys($v);
+                $key = array_shift($keys);
+                $val = $v[$key];
+                $query = $this->orm->query($key);
+                $id = [];
+                $query->search([$key => $val], function ($row) use (&$id) {
+                    $id[] = $row['id'];
+                });
+                if(count($id) === 0) {
+                    throw new \Exception("Argument $key = $val not found.");
+                }
+                elseif(count($id) === 1) {
+                    $args[$k] = $id[0];
+                }
+                else {
+                    $args[$k] = $id;
+                }
+            }
+        }
+        $qr->search($args,$action);
     }
 }

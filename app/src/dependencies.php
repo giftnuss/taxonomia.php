@@ -30,5 +30,14 @@ $container['db'] = function ($c) {
         $setup->shelf($shelf);
     });
 
+    $container['model'] = function () use ($setup) {
+        return $setup->getModel();
+    };
     return $db;
+};
+
+$container['model'] = function ($c) {
+    $db = $c->get('db');
+    $schema = new Taxonomia\Schema();
+    return new Taxonomia\Model($db,$schema);
 };
