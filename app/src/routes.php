@@ -10,10 +10,6 @@ $app->get('/level/[{num}]', function ($request, $response, $args) {
     }
 
     $args['model'] = $this->model;
-    $this->logger->info("Slim-Skeleton '/' route " . var_export($model,true));
-
-    // Render index view
-    #sleep(5);
     return $this->renderer->render($response, "level/{$args['num']}.phtml", $args);
 
 });

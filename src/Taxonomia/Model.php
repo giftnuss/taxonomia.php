@@ -138,11 +138,8 @@ class Model
         }
     }
 
-    public function searchTriples($args,callable $action)
+    protected function prepareTripleArgs(&$args)
     {
-        $tr = $this->orm->table('triple');
-        $qr = $this->orm->query($tr);
-
         foreach($args as $k => $v) {
             if(is_array($v)) {
                 $keys = array_keys($v);
@@ -164,6 +161,23 @@ class Model
                 }
             }
         }
+    }
+
+    public function searchTriples($args,callable $action)
+    {
+        $tr = $this->orm->table('triple');
+        $qr = $this->orm->query($tr);
+        $this->prepareTripleArgs($args);
+
         $qr->search($args,$action);
+    }
+
+    public function countTriples($args)
+    {
+        $tr = $this->orm->table('triple');
+        $qr = $this->orm->query($tr);
+        $this->prepareTripleArgs($args);
+
+        return $qr->count($args);
     }
 }

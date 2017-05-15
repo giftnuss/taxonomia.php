@@ -22,6 +22,7 @@ class CategoryItem
 
     public function __construct()
     {
+        $this->hasChildren = false;
 
     }
 
@@ -38,6 +39,11 @@ class CategoryItem
     public function setCategoryId($id)
     {
         $this->categoryId = $id;
+    }
+
+    public function setHasChildren(bool $val)
+    {
+        $this->hasChildren = $val;
     }
 
     public function toArray()

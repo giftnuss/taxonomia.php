@@ -19,20 +19,24 @@ $container['logger'] = function ($c) {
     return new Apix\Log\Logger( array($app_logger) );
 };
 
+$container['shelf'] = function ($c) {
+    $settings = $c->get('settings');
+
+    $shelf = new Taxonomia\Shelf($settings['shelf']['rootdir']);
+    return $shelf;
+};
+
 $container['db'] = function ($c) {
     $settings = $c->get('settings');
 
     $db = Siox\Db::factory($settings['db']);
 
     $setup = new Taxonomia\Setup($db);
-    $setup->init(function ($setup) use ($settings) {
-        $shelf = new Taxonomia\Shelf($settings['shelf']['rootdir']);
+    $setup->init(function ($setup) use ($c) {
+        $shelf = $c->get('shelf');
         $setup->shelf($shelf);
     });
 
-    $container['model'] = function () use ($setup) {
-        return $setup->getModel();
-    };
     return $db;
 };
 

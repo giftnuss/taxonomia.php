@@ -10,12 +10,24 @@ $category->setName("Wurzel");
 $category->isLowestLevel(true);
 
 $model->searchTriples(
+   ['s' => ['concept' => 'is a'],
+    'p' => ['concept' => 'every'],
+    'o' => ['concept' => 'language']],
+   function ($row) use ($model,$category) {
+       $item = new CategoryItem();
+       $item->setId($row['id']);
+       $item->setName('Alle Sprachen');
+       $item->setHasChildren(true);
+       $category->addItem($item);
+   });
+
+$model->searchTriples(
    ['p' => ['concept' => 'is a'],'o' => ['concept' => 'language']],
    function ($row) use ($model,$category) {
        $item = new CategoryItem();
        $item->setId($row['id']);
        $item->setName($model->getConcept($row['s']));
-
+       $item->setHasChildren(true);
        $category->addItem($item);
    });
 

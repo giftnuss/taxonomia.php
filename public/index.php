@@ -13,18 +13,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 session_start();
 
-// Instantiate the app
-$settings = require __DIR__ . '/../app/src/settings.php';
-$app = new \Slim\App($settings);
-
-// Set up dependencies
-require __DIR__ . '/../app/src/dependencies.php';
-
-// Register middleware
-require __DIR__ . '/../app/src/middleware.php';
-
-// Register routes
-require __DIR__ . '/../app/src/routes.php';
+$app = require __DIR__ . '/../app/src/app.php';
 
 // Run app
 $app->run();

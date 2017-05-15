@@ -75,5 +75,12 @@ class Schema extends Base
         $model->triple(
             $model->concept('is segment in'),$opposite,
             $model->concept('has segment'));
+
+        # Predicate Logic?
+        $every = $model->concept("every");
+        $any = $model->concept("any");
+        $none = $model->concept("none");
+
+        $model->triple($isa,$every,$language);
     }
 }

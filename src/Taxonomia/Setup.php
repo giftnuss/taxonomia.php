@@ -22,6 +22,8 @@ class Setup
             $this->loadSchema();
             $action($this);
         }
+        // dev - update
+        $this->schema->loadCoreData($this->db);
     }
 
     protected function loadSchema()
