@@ -1,0 +1,40 @@
+<?php
+
+use Taxonomia\Model\Category;
+use Taxonomia\Model\CategoryItem;
+
+$categoryname = $triple['s']['value'];
+
+$category = new Category();
+
+$category->setId($triple['s']['id']);
+$category->setName($categoryname);
+$category->setParentId($triple['o']['id']);
+
+$model->searchTriples(
+   ['s' => ['concept' => 'is a'],
+    'p' => ['concept' => 'every'],
+    'o' => ['concept' => $categoryname]],
+   function ($row) use ($model,$category,$num,$categoryname) {
+       $item = new CategoryItem();
+       $item->setId($row['id']+1);
+       $item->setName("every $categoryname");
+       $item->setParentId($num);
+       $item->setHasChildren(true);
+       $category->addItem($item);
+   });
+
+$model->searchTriples(
+   ['p' => ['concept' => 'is a'],'o' => ['concept' => $categoryname]],
+   function ($row) use ($model,$category,$num) {
+       $item = new CategoryItem();
+       $item->setId($row['id']);
+       $item->setName($model->getConcept($row['s']));
+       $item->setHasChildren(true);
+       $item->setParentId($num);
+       $category->addItem($item);
+   });
+
+echo json_encode($category,JSON_PRETTY_PRINT);
+
+return;
