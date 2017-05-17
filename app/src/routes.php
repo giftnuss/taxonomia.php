@@ -1,17 +1,21 @@
 <?php
 // Routes
 
-$app->get('/level/[{num}]', function ($request, $response, $args) {
+$app->get('/cty/[{num}]', function ($request, $response, $args) {
     $response->withHeader('Content-Type','application/json');
 
-    $this->logger->info("Slim-Skeleton '/' route " . var_export($args,true));
-    if(empty($args['num'])) {
-        $args['num'] = 0;
-    }
+    $this->logger->info("Slim-Skeleton '/cty' route " . var_export($args,true));
 
     $args['model'] = $this->model;
-    return $this->renderer->render($response, "level/{$args['num']}.phtml", $args);
+    if(empty($args['num'])) {
+        $args['num'] = 0;
+        return $this->renderer->render($response, "level/{$args['num']}.phtml", $args);
+    }
+    $args['triple'] = $triple = $this->model->getTriple($args['num']);
 
+    if($triple['o']['type'] == 'concept') {
+        return $this->renderer->render($response, "level/{$triple['o']['value']}.phtml", $args);
+    }
 });
 
 $app->get('/foo', function ($request, $response, $args) {
