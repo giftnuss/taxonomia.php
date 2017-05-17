@@ -48,7 +48,7 @@ class Model
         if($this->isUniqueIndex($name) || $isunique) {
             $qr->if_not(array($name => $word),function ($sql,$table)
                 use ($it,$ct,$word,&$id,$name) {
-                $sql->insert($it,array('id' => null));
+                $sql->insert($it,array('id' => null,'tablename' => $ct->getName()));
                 $id = $sql->lastInsertId('id');
                 $sql->insert($ct,array('id' => $id,$name => $word));
             }, function ($row) use (&$id) {
@@ -57,7 +57,7 @@ class Model
             return $id;
         }
         if($this->isAmbiguousIndex($name)) {
-            $this->sql->insert($it,array('id' => null));
+            $this->sql->insert($it,array('id' => null, 'tablename' => $ct->getName()));
             $id = $this->sql->lastInsertId('id');
             $this->sql->insert($ct,array('id' => $id,$name => $word));
             return $id;
@@ -71,11 +71,34 @@ class Model
         $id = array_shift($args);
         $t = $this->orm->table($name);
         $qr = $this->orm->query($t);
-        $result = '';
-        $qr->search(['id' => $id],function ($row) use ($name,&$result) {
-            $result = $row[$name];
-        });
+        $result = $qr->pick(['id' => $id]);
+        return $result[$name];
+    }
+
+    public function getTriple($id)
+    {
+        $t = $this->orm->table('triple');
+        $qr = $this->orm->query($t);
+        $triple = $qr->pick(['id' => $id]);
+        $result = ['id' => $triple['id']];
+        foreach(['s','p','o'] as $c) {
+            $result[$c] = $this->record($triple[$c]);
+        }
+
         return $result;
+    }
+
+    public function record($id)
+    {
+        $i = $this->orm->table('id');
+        $qr = $this->orm->query($i);
+        $row = $qr->pick(['id' => $id]);
+        $t = $this->orm->table($row['tablename']);
+        $record = $this->orm->query($t)->pick(['id' => $id]);
+        // TODO - can not use now column names: type, value
+        $record['type'] = $row['tablename'];
+        $record['value'] = $record[$row['tablename']];
+        return $record;
     }
 
     public function triple($s,$p,$o)
@@ -106,7 +129,7 @@ class Model
         if($lookup['count'] === 0) {
            $qr->if_not($args,
                function ($sql,$table) use ($tr,$it,&$id,$s,$p,$o) {
-                   $sql->insert($it,array('id' => null));
+                   $sql->insert($it,array('id' => null, 'tablename' => $tr->getName()));
                    $id = $sql->lastInsertId('id');
                    $sql->insert($tr,array('id' => $id,'s' => $s,'p' => $p,'o' => $o));
            }, function ($row) use (&$id) {
@@ -123,7 +146,7 @@ class Model
            $qr->if_not($searchargs,
               function ($sql,$table) use ($lookup,$it,$tr,&$id,$searchargs) {
                  $searchargs[$lookup['what']] = $this->{$lookup['key']}($lookup['val']);
-                 $sql->insert($it,array('id' => null));
+                 $sql->insert($it,array('id' => null, 'tablename' => $tr->getName()));
                  $id = $sql->lastInsertId('id');
 
                  $sql->insert($tr,array('id' => $id,
@@ -165,19 +188,13 @@ class Model
 
     public function searchTriples($args,callable $action)
     {
-        $tr = $this->orm->table('triple');
-        $qr = $this->orm->query($tr);
         $this->prepareTripleArgs($args);
-
-        $qr->search($args,$action);
+        $this->orm->query('triple')->search($args,$action);
     }
 
     public function countTriples($args)
     {
-        $tr = $this->orm->table('triple');
-        $qr = $this->orm->query($tr);
         $this->prepareTripleArgs($args);
-
-        return $qr->count($args);
+        return $this->orm->query('triple')->count($args);
     }
 }
