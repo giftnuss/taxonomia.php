@@ -23,7 +23,7 @@ function hideSpinner(){
 
         var $millerCol = $("#category-miller-cols-container");
 
-        jQuery.getJSON( "/level/",
+        jQuery.getJSON( "/cty/",
             function ( data ) {
                 $millerCol.millerColumn({
                    isReadOnly: true,
@@ -31,27 +31,13 @@ function hideSpinner(){
                 });
             });
 
-$millerCol.on("item-selected", ".miller-col-list-item",
-                    function (event, data) {
-
-            console.log("item selected.. data: " + data.itemId);
-/*
-            var category = findCategoryByParentId(categories, data.categoryId);
-            var itemCategories2 = itemCategories.find({
-                $and: [
-                    {
-                        categoryId: category.getCategoryId()
-                    },
-                    {
-                        parentId: data.itemId
-                    }
-               ]
-            });
-
-            category.items = itemCategories2;
-
-            $millerCol.millerColumn("addCol", category);
-*/
+        $millerCol.on("item-selected", ".miller-col-list-item",
+            function (event, data) {
+                jQuery.getJSON( "/cty/" + data.itemId,
+                    function ( back ) {
+                        console.log("Show %o",back);
+                        $millerCol.millerColumn("addCol", back);
+                    });
         });
 
     });
