@@ -20,6 +20,7 @@
         "league/flysystem": "^1.1@dev",
         "apix/log": "dev-master",
         "slim/php-view": "dev-master",
+	"wikimedia/simplei18n": "dev-master",
         "wikimedia/textcat": "dev-master"
     },
     "autoload": {
