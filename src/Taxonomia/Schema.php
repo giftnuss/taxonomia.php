@@ -12,9 +12,10 @@ class Schema extends Base
         $this->type('id')->int->size(14);
         $this->type('word')->varchar->size(128);
         $this->type('uri')->char->size(4095);
+        $this->type('tablename')->varchar->size(64);
 
         $this->table('id')
-            ->column->id('id')
+            ->column->id('id')->tablename('tablename')
             ->constraint->pk('id');
 
         $this->table('concept')
@@ -49,6 +50,10 @@ class Schema extends Base
     public function loadCoreData($db)
     {
         $model = new Model($db, $this);
+
+        $category = $model->concept('category');
+        $time = $model->concept('time');
+
         $opposite = $model->concept('is opposite of');
         $model->triple(
             $model->concept('is concept of term'),$opposite,
@@ -60,6 +65,9 @@ class Schema extends Base
 
         $isa = $model->concept('is a');
         $language = $model->concept('language');
+
+        $model->triple($language,$isa,$category);
+        $model->triple($time,$isa,$category);
 
         $model->triple($german,$isa,$language);
         $model->triple($english,$isa,$language);
