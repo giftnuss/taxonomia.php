@@ -1,0 +1,17 @@
+
+taxonomia.php
+=============
+
+This is a utility for exploring a local document repository.
+
+INSTALL
+-------
+
+Edit app/src/settings.php so that shelf rootdir points to folder
+where your documents are stored.
+
+Run scripts indexer.
+
+Start server.sh and look what is already done.
+
+Thank you for using taxonomia.php.
