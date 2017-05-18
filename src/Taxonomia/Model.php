@@ -9,8 +9,10 @@ class Model
     protected $schema;
     public $orm;
 
-    protected $unique = array('concept','uri');
+    protected $unique = array('concept','entity','uri');
     protected $ambiguous = array('description','note','term');
+
+    protected $lockCreation = false;
 
     public function __construct($db, $schema)
     {
@@ -18,6 +20,16 @@ class Model
         $this->sql = $db->sql();
         $this->schema = $schema;
         $this->orm = $db->orm($schema);
+    }
+
+    public function lockCreation()
+    {
+        $this->lockCreation = true;
+    }
+
+    public function unlockCreation()
+    {
+        $this->lockCreation = false;
     }
 
     protected function isUniqueIndex($name)
@@ -44,10 +56,14 @@ class Model
 
         $word = array_shift($args);
         $isunique = isset($args[0]) && $args[0];
+        $lock = $this->lockCreation;
 
         if($this->isUniqueIndex($name) || $isunique) {
             $qr->if_not(array($name => $word),function ($sql,$table)
-                use ($it,$ct,$word,&$id,$name) {
+                use ($it,$ct,$word,&$id,$name,$lock) {
+                if($lock) {
+                    throw new \Exception("Creation is locked!");
+                }
                 $sql->insert($it,array('id' => null,'tablename' => $ct->getName()));
                 $id = $sql->lastInsertId('id');
                 $sql->insert($ct,array('id' => $id,$name => $word));
@@ -57,6 +73,9 @@ class Model
             return $id;
         }
         if($this->isAmbiguousIndex($name)) {
+            if($lock) {
+                throw new \Exception("Creation is locked!");
+            }
             $this->sql->insert($it,array('id' => null, 'tablename' => $ct->getName()));
             $id = $this->sql->lastInsertId('id');
             $this->sql->insert($ct,array('id' => $id,$name => $word));
