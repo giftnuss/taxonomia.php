@@ -9,7 +9,7 @@ return [
             'template_path' => __DIR__ . '/../../templates/',
         ],
 
-        // Monolog settings
+        // log settings
         'logger' => [
             'name' => 'taxonomia-app',
             'path' => __DIR__ . '/../../logs/app.log',

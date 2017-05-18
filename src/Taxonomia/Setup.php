@@ -41,6 +41,7 @@ class Setup
         $contains = $model->concept("contains");
         $segment = $model->concept("is segment in");
 
+        $this->db->beginTransaction();
         $shelf->collectFolders(function ($shelf,$folder)
             use ($model,$isa,$folderconcept,$contains,$segment)
         {
@@ -57,6 +58,7 @@ class Setup
 
             $model->triple(['term' => $folder['filename']],$segment,$uri);
         });
+        $this->db->commit();
     }
 
     public function getModel()

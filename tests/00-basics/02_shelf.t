@@ -14,3 +14,15 @@ $shelf = new Shelf($root);
 
 $c = $shelf->listRootDirs($root);
 is_deeply($c,['a','b','c']);
+
+$shelf->collectFolders(function ($slf,$entry) {
+    print_r($entry);
+    echo $slf->makeUri($entry),"\n";
+    if($entry['dirname']) {
+        echo $slf->makeParentUri($entry),"\n";
+    }
+});
+
+$shelf->collectDocuments(function ($slf,$entry) {
+    print_r($entry);
+});

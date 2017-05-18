@@ -71,33 +71,29 @@ class Shelf
             }
         }
     }
-    /**
-     * UTF-8 to uri encode - is there a better way?
-     */
+
     public function makeUri($entry)
     {
-        $parts = preg_split('/\//u',$entry['path'],null,PREG_SPLIT_NO_EMPTY);
+        $uri = $this->_makeUri($entry['path']);
+        $uri .= ($entry['type'] === 'dir' ? '/' : '');
+        return $uri;
+    }
+
+    public function makeParentUri($entry)
+    {
+        $uri = $this->_makeUri($entry['dirname']);
+        $uri .= "/";
+        return $uri;
+    }
+
+    protected function _makeUri($entry)
+    {
+        $parts = preg_split('/\//u',$entry,null,PREG_SPLIT_NO_EMPTY);
         $result = array();
         foreach($parts as $part) {
-            /*
-            $str = '';
-            $chars = preg_split('//u', $part, null, PREG_SPLIT_NO_EMPTY));
-            foreach($chars as $char) {
-                if(strlen($char) === 1) {
-                    $str .= rawurlencode($char);
-                }
-                else {
-                    $len = strlen($char);
-                    for($i = 0; $i < $len; ++$i) {
-                        $str .= sprintf("%%%02x",substr($char,$i,1));
-                    }
-                }
-            }
-            */
             $result[] = urlencode($part);
         }
-        $uri = sprintf("shelf:///%s%s",implode('/',$result),
-            ($entry['type'] === 'dir' ? '/' : ''));
+        $uri = sprintf("shelf:///%s",implode('/',$result));
         return $uri;
     }
 }

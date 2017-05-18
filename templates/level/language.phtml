@@ -1,0 +1,45 @@
+<?php
+
+use Taxonomia\Model\Category;
+use Taxonomia\Model\CategoryItem;
+
+$language = $triple['s']['value'];
+if($language == 'is a') { // every is the only case until now
+    $language = 'every language';
+    $alllanguages = true;
+    $_SESSION['language'] = false;
+}
+else {
+    $alllanguages = false;
+    $_SESSION['language'] = $triple['s']['id'];
+}
+
+$category = new Category();
+
+$category->setId($triple['s']['id']);
+$category->setName($language);
+$category->setParentId($triple['o']['id']);
+
+// search root folder(s)
+$model->searchTriples(
+   ['p' => ['concept' => 'is a'],
+    'o' => ['concept' => 'folder']],
+   function ($row) use ($model,$category,$num) {
+       $count = $model->countTriples(
+           ['p' => ['concept' => 'contains'], 'o' => $row['s']]);
+       if($count != 0) {
+           return;
+       }
+
+       $triple = $model->getTriple($row['id']);
+       $item = new CategoryItem();
+       $item->setId($row['id']);
+       $item->setName(basename($triple['s']['value']));
+       $item->setParentId($num);
+       $item->setHasChildren(true);
+       $category->addItem($item);
+   });
+
+echo json_encode($category,JSON_PRETTY_PRINT);
+
+return;

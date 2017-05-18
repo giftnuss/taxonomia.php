@@ -2,7 +2,9 @@
 
 namespace Taxonomia\Model;
 
-class CategoryItem
+use JsonSerializable;
+
+class CategoryItem implements JsonSerializable
 {
     protected $itemId;
 
@@ -46,6 +48,11 @@ class CategoryItem
         $this->hasChildren = $val;
     }
 
+    public function setParentId($id)
+    {
+        $this->parentId = $id;
+    }
+
     public function toArray()
     {
         $result = array();
@@ -53,6 +60,11 @@ class CategoryItem
             $result[substr($k,3)] = $v;
         }
         return $result;
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->toArray();
     }
 }
 

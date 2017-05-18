@@ -19,17 +19,23 @@ $model = $c->get('model');
 $shelf = $c->get('shelf');
 $shelf->addSkipDocumentExtension(array('jp2'));
 
-$docconcept = $model->concept('document');
-$isa = $model->concept('is a');
-$language = $model->concept('in language');
-$german = $model->concept('german');
-$english = $model->concept('english');
+$model->lockCreation();
+$topic['document']    = $model->concept('document');
+$topic['is a']        = $model->concept('is a');
+$topic['in language'] = $model->concept('in language');
+$topic['contains']    = $model->concept('contains');
+$topic['german']      = $model->entity('german');
+$topic['english']     = $model->entity('english');
+$model->unlockCreation();
 
 $shelf->collectDocuments(function ($shelf,$entry)
-    use($model,$docconcept,$isa,$debug,$language,$german,$english) {
+    use($db,$model,$debug,$topic) {
+    $db->beginTransaction();
 
-    $uri = $model->uri($shelf->makeUri($entry)); echo "$uri\n";
-    $model->triple($uri,$isa,$docconcept);
+    $uri = $model->uri($shelf->makeUri($entry));
+    $parent = $model->uri($shelf->makeParentUri($entry)); echo "$uri $parent\n";
+    $model->triple($uri,$topic['is a'],$topic['document']);
+    $model->triple($parent,$topic['contains'],$uri);
 
     if(isset($entry['extension'])) {
         if(strtolower($entry['extension']) === 'pdf') {
@@ -39,17 +45,18 @@ $shelf->collectDocuments(function ($shelf,$entry)
             $indexer->setDebug($debug);
 
             $found = 0;
-            $model->searchTriples(['s' => $uri, 'p' => $language],
+            $model->searchTriples(['s' => $uri, 'p' => $topic['in language']],
                 function ($row) use (&$found) { ++$found; });
             if(!$found) {
                 $languages = $indexer->detectLanguages();
                 if(isset($languages['de'])) {
-                    $model->triple($uri,$language,$german);
+                    $model->triple($uri,$topic['in language'],$topic['german']);
                 }
                 if(isset($languages['en'])) {
-                    $model->triple($uri,$language,$english);
+                    $model->triple($uri,$topic['in language'],$topic['english']);
                 }
             }
         }
     }
+    $db->commit();
 });

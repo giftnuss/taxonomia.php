@@ -1,0 +1,53 @@
+<?php
+
+use Taxonomia\Model\Category;
+use Taxonomia\Model\CategoryItem;
+
+// die(print_r($_SESSION));
+
+$folder = basename($triple['s']['value']);
+
+$category = new Category();
+
+$category->setId($triple['s']['id']);
+$category->setName($folder);
+$category->setParentId($triple['o']['id']);
+
+$model->lockCreation();
+$topic['is a'] = $model->concept('is a');
+$topic['document'] = $model->concept('document');
+$topic['in language'] = $model->concept('in language');
+$model->unlockCreation();
+
+// search in folder
+$model->searchTriples(
+   ['s' => $triple['s']['id'], 'p' => ['concept' => 'contains']],
+   function ($row) use ($model,$category,$num,$topic) {
+       $triple = $model->getTriple($row['id']);
+
+       $doccount = $model->countTriples(
+           ['s' => $triple['o']['id'],
+            'p' => $topic['is a'],
+            'o' => $topic['document']]);
+
+       if($doccount == 1 && $_SESSION['language']) {
+           $inlang = $model->countTriples(
+               ['s' => $triple['o']['id'],
+                'p' => $topic['in language'],
+                'o' => $_SESSION['language']]);
+           if($inlang < 1) {
+               return;
+           }
+       }
+
+       $item = new CategoryItem();
+       $item->setId($row['id']);
+       $item->setName(basename($triple['o']['value']));
+       $item->setParentId($num);
+       $item->setHasChildren($doccount < 1);
+       $category->addItem($item);
+   });
+
+echo json_encode($category,JSON_PRETTY_PRINT);
+
+return;

@@ -14,24 +14,32 @@ class Schema extends Base
         $this->type('uri')->char->size(4095);
         $this->type('tablename')->varchar->size(64);
 
-        $this->table('id')
-            ->column->id('id')->tablename('tablename')
-            ->constraint->pk('id');
-
         $this->table('concept')
             ->column->id('id')->word('concept')
             ->constraint->pk('id')->unique('concept');
-
-        $this->table('term')
-            ->column->id('id')->word('term')
-            ->constraint->pk('id');
 
         $this->table('description')
             ->column->id('id')->text('description')
             ->constraint->pk('id');
 
+        $this->table('entity')
+            ->column->id('id')->word('entity')
+            ->constraint->pk('id')->unique('entity');
+
+        $this->table('id')
+            ->column->id('id')->tablename('tablename')
+            ->constraint->pk('id');
+
         $this->table('note')
             ->column->id('id')->text('note')
+            ->constraint->pk('id');
+
+        $this->table('occurence')
+            ->column->id('id')->uri('occurence')
+            ->constraint->pk('id');
+
+        $this->table('term')
+            ->column->id('id')->word('term')
             ->constraint->pk('id');
 
         $this->table('triple')
@@ -41,15 +49,12 @@ class Schema extends Base
         $this->table('uri')
             ->column->id('id')->uri('uri')
             ->constraint->pk('id')->unique('uri');
-
-        $this->table('occurence')
-            ->column->id('id')->uri('occurence')
-            ->constraint->pk('id');
     }
 
     public function loadCoreData($db)
     {
         $model = new Model($db, $this);
+        $db->beginTransaction();
 
         $category = $model->concept('category');
         $time = $model->concept('time');
@@ -60,8 +65,8 @@ class Schema extends Base
             $model->concept('uses concept'));
 
         $language = $model->concept('in language');
-        $german = $model->concept('german');
-        $english = $model->concept('english');
+        $german = $model->entity('german');
+        $english = $model->entity('english');
 
         $isa = $model->concept('is a');
         $language = $model->concept('language');
@@ -90,5 +95,7 @@ class Schema extends Base
         $none = $model->concept("none");
 
         $model->triple($isa,$every,$language);
+
+        $db->commit();
     }
 }

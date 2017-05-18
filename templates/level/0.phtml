@@ -5,9 +5,25 @@ use Taxonomia\Model\CategoryItem;
 
 $category = new Category();
 
-$category->setId(1);
-$category->setName("Wurzel");
+$category->setId($model->concept('category'));
+$category->setName("category");
 $category->isLowestLevel(true);
+
+$model->searchTriples(
+    ['p' => ['concept' => 'is a'],'o' => ['concept' => 'category']],
+    function ($row) use ($model,$category) {
+       $item = new CategoryItem();
+       $item->setId($row['id']);
+       $concept = $model->getConcept($row['s']);
+       $item->setName($concept);
+       $count = $model->countTriples(['p' => ['concept' => 'is a'],'o' => $row['s']]);
+       $item->setHasChildren($count > 0);
+       $category->addItem($item);
+   });
+
+echo json_encode($category,JSON_PRETTY_PRINT);
+
+return;
 
 $model->searchTriples(
    ['s' => ['concept' => 'is a'],

@@ -16,6 +16,9 @@ $app->get('/cty/[{num}]', function ($request, $response, $args) {
     if($triple['o']['type'] == 'concept') {
         return $this->renderer->render($response, "level/{$triple['o']['value']}.phtml", $args);
     }
+    elseif($triple['o']['type'] == 'uri') { // uri contains uri
+        return $this->renderer->render($response, "level/uri.phtml", $args);
+    }
 });
 
 $app->get('/foo', function ($request, $response, $args) {

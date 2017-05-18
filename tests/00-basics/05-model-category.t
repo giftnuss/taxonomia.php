@@ -30,10 +30,15 @@ $json = <<<__JSON__
 }
 __JSON__;
 
-is_deeply(json_decode(json_encode($c)),json_decode($json),'empty object');
+#is_deeply(json_decode(json_encode($c)),json_decode($json),'empty object');
 
 
-#echo json_encode($c,JSON_PRETTY_PRINT);
+$i = new CategoryItem();
+$i->setId(1);
+$i->setParentId(17);
+$i->setName('name me');
+
+echo json_encode($i,JSON_PRETTY_PRINT);
 
 #print_r($c->jsonSerialize());
 
