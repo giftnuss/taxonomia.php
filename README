@@ -4,8 +4,22 @@ taxonomia.php
 
 This is a utility for exploring a local document repository.
 
+REQUIREMENTS
+------------
+
+- php 5.5 with following extensions
+   - pdo
+   - dba
+composer
+make
+git
+python2.7
+pyinstaller
+
 INSTALL
 -------
+
+Use composer for installing dependencies.
 
 Edit app/src/settings.php so that shelf rootdir points to folder
 where your documents are stored.
