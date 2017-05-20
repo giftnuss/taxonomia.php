@@ -3,6 +3,8 @@
 if(!isset($GLOBALS['__setup_done'])) {
   $__setup_done = true;
   $loader = require realpath(__DIR__.'/../vendor/autoload.php');
+  $loader->add('Siox\\', array(__DIR__.'/../src'));
+
   #print_r(get_class_methods($loader));
   require realpath(__DIR__.'/../vendor/giftnuss/test.php/Test.php');
 
