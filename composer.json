@@ -20,13 +20,23 @@
         "league/flysystem": "^1.1@dev",
         "apix/log": "dev-master",
         "slim/php-view": "dev-master",
-	"wikimedia/simplei18n": "dev-master",
+        "wikimedia/simplei18n": "dev-master",
         "wikimedia/textcat": "dev-master",
-        "nategood/httpful": "dev-master"
+        "nategood/httpful": "dev-master",
+        "giftnuss/viewerjs": "dev-master"
     },
     "autoload": {
         "psr-0": {
             "Taxonomia\\": "src/"
         }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/giftnuss/ViewerJS"
+        }
+    ],
+    "config": {
+        "component-dir": "public/components"
     }
 }
