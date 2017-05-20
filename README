@@ -11,10 +11,10 @@ REQUIREMENTS
    - pdo
    - dba
 composer
+curl
 make
 git
 python2.7
-pyinstaller
 
 INSTALL
 -------
