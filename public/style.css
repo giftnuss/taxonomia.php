@@ -1,0 +1,31 @@
+
+
+.miller-col-container,
+.miller-col-loading-container,
+#word-cloud-container,
+#item-actions-container {
+    border: 1px solid #DBDBDB;
+}
+
+#word-cloud-container, #item-actions-container {
+    font-family: "Roboto-light", sans-serif;
+    float: left;
+    width: 35%;
+    position: relative;
+    z-index: 1;
+    background-color: #fff;
+    margin-top: 2em;
+    min-height: 80px;
+}
+
+#word-cloud-container {
+    margin-left: 12.5%;
+}
+
+#item-actions-container {
+    margin-left: 5%;
+}
+
+.link {
+    cursor: pointer;
+}
