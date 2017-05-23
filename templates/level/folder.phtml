@@ -42,7 +42,7 @@ $model->searchTriples(
 
        $item = new CategoryItem();
        $item->setId($row['id']);
-       $item->setName(basename($triple['o']['value']));
+       $item->setName(urldecode(basename($triple['o']['value'])));
        $item->setParentId($num);
        $item->setHasChildren($doccount < 1);
        $category->addItem($item);

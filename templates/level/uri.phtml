@@ -2,16 +2,11 @@
 
 use Taxonomia\Model\Category;
 use Taxonomia\Model\CategoryItem;
+use Taxonomia\Model\Document;
 
 // die(print_r($_SESSION));
 
-$folder = basename($triple['o']['value']);
-
-$category = new Category();
-
-$category->setId($triple['s']['id']);
-$category->setName($folder);
-$category->setParentId($triple['o']['id']);
+$folder = urldecode(basename($triple['o']['value']));
 
 $model->lockCreation();
 $topic['is a'] = $model->concept('is a');
@@ -23,9 +18,24 @@ $doccount = $model->countTriples(
             'p' => $topic['is a'],
             'o' => $topic['document']]);
 if($doccount == 1) {
-    echo json_encode($category,JSON_PRETTY_PRINT);
+    $document = new Document();
+    $document->setName($folder);
+    $model->searchTriples(
+        ['s' => $triple['o']['id']],
+        function ($row) use ($document,$topic) {
+            if($row['o'] == $topic['document']) {
+                $document->setId($row['id']);
+            }
+        });
+    echo json_encode($document,JSON_PRETTY_PRINT);
     return;
 }
+
+$category = new Category();
+
+$category->setId($triple['s']['id']);
+$category->setName($folder);
+$category->setParentId($triple['o']['id']);
 
 // search in folder
 $model->searchTriples(
@@ -34,7 +44,7 @@ $model->searchTriples(
        $triple = $model->getTriple($row['id']);
        $item = new CategoryItem();
        $item->setId($row['id']);
-       $item->setName(basename($triple['o']['value']));
+       $item->setName(urldecode(basename($triple['o']['value'])));
        $item->setParentId($num);
        $doccount = $model->countTriples(
            ['s' => $triple['o']['id'],

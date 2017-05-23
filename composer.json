@@ -22,7 +22,7 @@
         "slim/php-view": "dev-master",
         "wikimedia/simplei18n": "dev-master",
         "wikimedia/textcat": "dev-master",
-        "nategood/httpful": "dev-master",
+        "guzzlehttp/guzzle": "~6.0",
         "giftnuss/viewerjs": "dev-master"
     },
     "autoload": {

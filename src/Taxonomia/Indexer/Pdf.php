@@ -32,4 +32,9 @@ class Pdf extends Document
         $textcat = new TextCat();
         return $textcat->classify( $text );
     }
+
+    public function extractText()
+    {
+
+    }
 }

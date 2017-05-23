@@ -21,15 +21,22 @@ $app->get('/cty/[{num}]', function ($request, $response, $args) {
     }
 });
 
-$app->get('/foo', function ($request, $response, $args) {
-    $response->withHeader('Content-Type','application/json');
-    // Render index view
-    //sleep(5);
-    return $this->renderer->render($response, 'foo.phtml', $args);
+$app->get('/document/{num}', function ($request, $response, $args) {
 
+    $args['triple'] = $triple = $this->model->getTriple($args['num']);
+    $shelf = $this->shelf;
+
+    $newStream = $shelf->getStream($triple['s']['value']);
+    $response = $response
+        ->withHeader('Content-Type', 'application/pdf')
+        ->withHeader("Content-Disposition","inline; filename=downloaded.pdf")
+        ->withHeader("Content-Length",$shelf->getFilesize($triple['s']['value']))
+        ->withBody($newStream);
+
+    return $response;
 });
 
-$app->get('/[{name}]', function ($request, $response, $args) {
+$app->get('/', function ($request, $response, $args) {
     // Sample log message
     $this->logger->info("Slim-Skeleton '/' route");
 

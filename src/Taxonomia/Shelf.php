@@ -5,6 +5,8 @@ namespace Taxonomia;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local;
 
+use GuzzleHttp\Psr7\Stream;
+
 class Shelf
 {
     protected $fs;
@@ -96,4 +98,41 @@ class Shelf
         $uri = sprintf("shelf:///%s",implode('/',$result));
         return $uri;
     }
+
+    protected function urlToPath($url)
+    {
+        if(strstr($url, 'shelf:///')) {
+            return urldecode(substr($url,8));
+        }
+        throw \Exception("Invalid url $url!");
+    }
+
+    public function getFilesize($url)
+    {
+        $path = $this->urlToPath($url);
+        return $this->getFilesystem()->getSize($path);
+    }
+
+    public function getStream($url)
+    {
+        $path = $this->urlToPath($url);
+        $size = $this->getFilesize($url);
+        $source = $this->getFilesystem()->readStream($path);
+        return new Stream($source,['size' => $size]);
+    }
+
+    /* needs tests */
+    public function echoUrl($url)
+    {
+        $path = $this->urlToPath($url);
+        $target = fopen('php://output','w');
+        $source = $this->getFilesystem()->readStream($path);
+        $size = $this->getFilesize($url);
+        for($b=0; $b<$size; $b+=8192) {
+            stream_copy_to_stream($source,$target,8192,$b);
+        }
+        fclose($source);
+    }
+
+
 }
