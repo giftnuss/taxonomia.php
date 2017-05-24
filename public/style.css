@@ -1,29 +1,104 @@
 
+/****************************
+ *          TABS            *
+ ****************************/
+.main-tabs {
+    width: 75%;
+    margin: auto;
+}
+.main-tabs {
+    font-family: "Roboto-light", sans-serif;
+    width:75%;
+    background:#FEFEFE;
+    font-size:93%;
+    line-height:normal;
+}
 
+.main-tabs ul.tabs-list {
+    margin:0;
+    padding:10px 10px 0;
+    list-style:none;
+    overflow:hidden;
+    border-bottom: 1px solid #DBDBDB;
+}
+.main-tabs ul.tabs-list li {
+    float:left;
+    margin:0;
+    margin-right:0.3em;
+    padding:0 0 0 9px;
+    border: 1px solid #DBDBDB;
+    border-bottom: 0px;
+}
+.main-tabs ul.tabs-list a {
+    float:none;
+    display:block;
+    padding:5px 15px 4px 6px;
+    text-decoration:none;
+    font-weight:bold;
+    color:#000;
+}
+.main-tabs ul.tabs-list a:hover {
+    color:#333;
+}
+.main-tabs ul.tabs-list .current {
+    border-width:2px;
+}
+.main-tabs ul.tabs-list .current a {
+    color:#333;
+    padding-bottom:5px;
+}
+.main-tabs ul.tabs-list span.current-info {
+    visibility: hidden;
+    display: none;
+}
+
+/***************************************
+ *           PANEL
+ ***************************************/
+.panel {
+    overflow: hidden;
+    padding-bottom: 1em;
+    border-bottom: 1px solid #DBDBDB;
+}
+h2.tabhead {
+    margin: 0;
+    padding: 0.5em 0;
+    text-align: center;
+}
+h2.tabhead:focus {
+    text-decoration:none;
+    border: 0;
+    background-color: #f0f0f0;
+}
+/***************************************
+ *           MILLER-COLUMNS            *
+ ***************************************/
+.miller-cols-container-wrapper {
+    max-width:100%;
+}
 .miller-col-container,
 .miller-col-loading-container,
 #word-cloud-container,
 #item-actions-container {
     border: 1px solid #DBDBDB;
 }
+.miller-col-container,
+.miller-col-loading-container {
+    border-left: 0;
+}
 
 #word-cloud-container, #item-actions-container {
     font-family: "Roboto-light", sans-serif;
     float: left;
-    width: 35%;
+    width: 48%;
     position: relative;
     z-index: 1;
     background-color: #fff;
     margin-top: 2em;
     min-height: 80px;
 }
-
-#word-cloud-container {
-    margin-left: 12.5%;
-}
-
 #item-actions-container {
-    margin-left: 5%;
+    float: right;
 }
 
 .link {

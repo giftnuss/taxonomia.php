@@ -7,27 +7,58 @@
     <link rel="stylesheet" href="./miller/css/miller-material.css"/>
     <link rel="stylesheet" href="./miller/css/material-design-font-style.css"/>
     <link rel="stylesheet" href="./style.css"/>
-
-    <script type="text/javascript" src="./miller/js/jquery.js"></script>
-    <script type="text/javascript" src="./miller/js/miller.js"></script>
-
-    <script type="text/javascript" src="./js/taxonomia.js"></script>
 </head>
 
 <body>
 
-<div id="category-miller-cols-container">
-</div>
+<div class="main-tabs">
 
-<div id="word-cloud-container">
-</div>
+  <h2>Taxonomia</h2>
+  <div class="panel tabbody">
+      <div id="category-miller-cols-container">
+      </div>
 
-<div id="item-actions-container">
+      <div id="word-cloud-container">test
+      </div>
+
+      <div id="item-actions-container">
+      </div>
+  </div>
+
 </div>
 
 <pre>
 <?php // print_r($db); ?>
 </pre>
+
+
+<script type="text/javascript" src="./miller/js/jquery.js"></script>
+<script type="text/javascript" src="./miller/js/miller.js"></script>
+<script type="text/javascript" src="./js/jQuery.tabs.js"></script>
+<script type="text/javascript" src="./js/taxonomia.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".main-tabs").accessibleTabs({
+            tabhead:'h2',
+            fx:"show",
+            fxspeed:null
+        });
+    });
+    $(function () {
+        var num = 1;
+        $('#word-cloud-container').click(function (evt) {
+            $('.main-tabs').append("<h2>Tab-" + num++ + "</h2>");
+            $('.main-tabs').append("<div class=\"panel tabbody\">TEXT</div>");
+            $(".main-tabs").accessibleTabs({
+                tabhead:'h2',
+                fx:"show",
+                fxspeed:null
+            });
+        });
+    });
+</script>
+
 </body>
 
 </html>
