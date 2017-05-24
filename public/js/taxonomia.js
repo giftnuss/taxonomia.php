@@ -53,7 +53,17 @@ function hideSpinner(){
         element.append("<div>" + data.documentId + "</div>");
         element.append("<div id=\"link-" + id + "\" class=\"link\">" + data.documentName + "</div>");
         $("#link-" + id).click(function () {
-            console.log("hurra");
+            var extension = data.documentName.split('.').pop().toLowerCase();
+            $('.main-tabs').append("<h2>" + data.documentName + "</h2>");
+            $('.main-tabs').append("<div id=\"panel-" + id + "\" class=\"panel tabbody\"></div>");
+            $('#panel-' + id).append("<iframe src=\"./view/" + extension +
+                "/" + id + "\" allowfullscreen webkitallowfullscreen></iframe>");
+
+            $(".main-tabs").accessibleTabs({
+                tabhead:'h2',
+                fx:"show",
+                fxspeed:null
+            });
         });
         if(data.documentTitle.length > 0) {
             element.append("<div>" + data.documentTitle + "</div>");

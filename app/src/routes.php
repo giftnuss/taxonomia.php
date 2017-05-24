@@ -1,10 +1,23 @@
 <?php
 // Routes
 
-$app->get('/cty/[{num}]', function ($request, $response, $args) {
-    $response->withHeader('Content-Type','application/json');
+$app->get('/', function ($request, $response, $args) {
+    // Sample log message
+    $this->logger->info("Run '/' route for "  . $request->getRequestTarget());
+    $this->logger->info("Run '/' route for "  . $request->getUri()->getBaseUrl());
+      // var_export($request,true));
 
-    $this->logger->info("Slim-Skeleton '/cty' route " . var_export($args,true));
+    $db = $this->db;
+    $args['db'] = $db;
+
+    // Render index view
+    return $this->renderer->render($response, 'index.phtml', $args);
+});
+
+$app->get('/cty/[{num}]', function ($request, $response, $args) {
+    $response = $response->withHeader('Content-Type','application/json');
+
+    $this->logger->info("Json '/cty' route " . (isset($args['num'])?$args['num']:''));
 
     $args['model'] = $this->model;
     if(empty($args['num'])) {
@@ -36,14 +49,10 @@ $app->get('/document/{num}', function ($request, $response, $args) {
     return $response;
 });
 
-$app->get('/', function ($request, $response, $args) {
-    // Sample log message
-    $this->logger->info("Slim-Skeleton '/' route");
+$app->get('/view/{type:[a-z]+}/{num:\\d+}', function ($request, $response, $args) {
+    $this->logger->info("Route /view/" . $args['type'] . "/" . $args['num'] );
 
-    $db = $this->db;
-    $args['db'] = $db;
-
-    // Render index view
-    return $this->renderer->render($response, 'index.phtml', $args);
+    return $this->renderer->render($response, "view/pdf.phtml", $args);
 });
+
 

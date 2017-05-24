@@ -1,4 +1,7 @@
 
+.link {
+    cursor: pointer;
+}
 /****************************
  *          TABS            *
  ****************************/
@@ -70,6 +73,11 @@ h2.tabhead:focus {
     border: 0;
     background-color: #f0f0f0;
 }
+.panel iframe {
+    width: 100%;
+    min-height: 600px;
+    height: 100%;
+}
 /***************************************
  *           MILLER-COLUMNS            *
  ***************************************/
@@ -101,6 +109,4 @@ h2.tabhead:focus {
     float: right;
 }
 
-.link {
-    cursor: pointer;
-}
+

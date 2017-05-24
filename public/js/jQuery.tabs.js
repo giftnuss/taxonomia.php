@@ -20,6 +20,8 @@
  * Changes:
  *  - content wrap inner verhinderte mehrfaches Ausführen.
  *  - Überschriften werden ebenfalls mit versteckt
+ * Bugs:
+ *  - tab class last wird nicht gelöscht wenn neuer Tab hinzukommt
  */
 
 (function($) {
