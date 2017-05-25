@@ -6,7 +6,7 @@ return [
 
         // Renderer settings
         'renderer' => [
-            'template_path' => __DIR__ . '/../../templates/',
+            'template_path' => realpath(__DIR__ . '/../../templates') . '/',
         ],
 
         // log settings
@@ -21,6 +21,9 @@ return [
         ],
         'shelf' =>[
             'rootdir' => '/home/buecher'
+        ],
+        'controller' =>[
+            'viewer' => [ 'template_path' => realpath(__DIR__ . '/../../templates/viewer') . '/' ]
         ]
     ],
 ];

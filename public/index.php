@@ -1,8 +1,10 @@
 <?php
 
-$_SERVER['SCRIPT_NAME']=basename(__FILE__);
-
 if (PHP_SAPI == 'cli-server') {
+    // This is required because the builin Server behaves strange under
+    // some circumctances.
+    $_SERVER['SCRIPT_NAME']=basename(__FILE__);
+
     // To help the built-in PHP dev server, check if the request was actually for
     // something which should probably be served as a static file
     $url  = parse_url($_SERVER['REQUEST_URI']);
