@@ -49,10 +49,5 @@ $app->get('/document/{num}', function ($request, $response, $args) {
     return $response;
 });
 
-$app->get('/view/{type:[a-z]+}/{num:\\d+}', function ($request, $response, $args) {
-    $this->logger->info("Route /view/" . $args['type'] . "/" . $args['num'] );
-
-    return $this->renderer->render($response, "view/pdf.phtml", $args);
-});
-
+$app->get('/view/{type:[a-z]+}/{arg:.*}', \Taxonomia\Controller\Viewer::class);
 

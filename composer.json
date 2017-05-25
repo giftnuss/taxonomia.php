@@ -15,7 +15,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "slim/slim": "^3.0",
+        "slim/slim": "3.x-dev",
         "giftnuss/siox-db": "dev-master",
         "league/flysystem": "^1.1@dev",
         "apix/log": "dev-master",

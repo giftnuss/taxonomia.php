@@ -1,6 +1,11 @@
 <?php
 // DIC configuration
 
+function dbg($arg)
+{
+    error_log(print_r($arg,1));
+}
+
 $container = $app->getContainer();
 
 // view renderer
