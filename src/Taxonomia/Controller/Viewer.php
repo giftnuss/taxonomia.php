@@ -45,7 +45,7 @@ class Viewer
        $this->logger->info("Run 'Viewer' for route "  . $request->getRequestTarget());
        if(is_numeric($args['arg'])) {
            $renderer = $this->container->get('renderer');
-           return $renderer->render($response, "viewer/pdf.phtml", $args);
+           return $renderer->render($response, "viewer/pdf/pdf.phtml", $args);
        }
 
        $file = $args['type'] . '/' . $args['arg'];
