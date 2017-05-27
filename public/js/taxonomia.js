@@ -48,6 +48,7 @@ function hideSpinner(){
     });
 
     function display_document(element,data) {
+        var numeral = require("numeral");
         element.empty();
         var id = data.documentId;
         element.append("<div>" + data.documentId + "</div>");
@@ -68,6 +69,8 @@ function hideSpinner(){
         if(data.documentTitle.length > 0) {
             element.append("<div>" + data.documentTitle + "</div>");
         }
+        element.append("<div>Size: " + numeral(data.size).format('0.00ib'));
+        element.append("<div>Hash: " + data.hash);
         element.append("<div><a href=\"/document/" + id + "\" target=\"" + id + "\" >builtin pdf reader</a></div>");
 
     }

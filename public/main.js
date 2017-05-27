@@ -1,8 +1,21 @@
 
+// configure requirejs
+requirejs.config({
+  packages: [{
+    name: 'numeral',
+    // This location is relative to baseUrl.
+    location: '/js/numeral',
+    main: 'numeral'
+  }],
+  shim: {
+    'numeral': { exports: 'numeral' }
+  }
+});
+
 // Start the main app logic.
 requirejs(['miller/js/jquery',
 ], function () {
-    requirejs(['miller/js/miller','js/jQuery.tabs'
+    requirejs(['miller/js/miller','js/jQuery.tabs','numeral'
   ], function () {
       requirejs(['js/taxonomia'
     ], function () {
