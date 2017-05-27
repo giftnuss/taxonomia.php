@@ -9,7 +9,7 @@ class Model
     protected $schema;
     public $orm;
 
-    protected $unique = array('concept','entity','uri');
+    protected $unique = array('concept','entity','sha1','uri');
     protected $ambiguous = array('description','note','term');
 
     protected $lockCreation = false;

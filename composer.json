@@ -22,7 +22,9 @@
         "slim/php-view": "dev-master",
         "wikimedia/simplei18n": "dev-master",
         "wikimedia/textcat": "dev-master",
-        "guzzlehttp/guzzle": "~6.0"
+        "guzzlehttp/guzzle": "~6.0",
+        "kzykhys/git": "^1.0@dev",
+        "smalot/pdfparser": "dev-master"
     },
     "autoload": {
         "psr-0": {

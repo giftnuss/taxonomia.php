@@ -22,6 +22,9 @@ class Setup
             $this->loadSchema();
             $action($this);
         }
+        else {
+            (new DbSetup($this->db))->update($this->schema);
+        }
         // dev - update
         $this->schema->loadCoreData($this->db);
     }

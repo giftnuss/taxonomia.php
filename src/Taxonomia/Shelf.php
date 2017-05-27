@@ -4,6 +4,7 @@ namespace Taxonomia;
 
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local;
+use League\Flysystem\Util\StreamHasher;
 
 use GuzzleHttp\Psr7\Stream;
 
@@ -121,18 +122,11 @@ class Shelf
         return new Stream($source,['size' => $size]);
     }
 
-    /* needs tests */
-    public function echoUrl($url)
+    public function makeHash($url)
     {
-        $path = $this->urlToPath($url);
-        $target = fopen('php://output','w');
-        $source = $this->getFilesystem()->readStream($path);
-        $size = $this->getFilesize($url);
-        for($b=0; $b<$size; $b+=8192) {
-            stream_copy_to_stream($source,$target,8192,$b);
-        }
-        fclose($source);
+        $stream = $this->getStream($url);
+        $hasher = new StreamHasher('sha1');
+        return $hasher->hash($stream);
     }
-
 
 }

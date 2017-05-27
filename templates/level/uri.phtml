@@ -11,6 +11,7 @@ $folder = urldecode(basename($triple['o']['value']));
 $model->lockCreation();
 $topic['is a'] = $model->concept('is a');
 $topic['document'] = $model->concept('document');
+$topic['sha1 digest'] = $model->concept('sha1 digest');
 $model->unlockCreation();
 
 $doccount = $model->countTriples(
@@ -18,15 +19,29 @@ $doccount = $model->countTriples(
             'p' => $topic['is a'],
             'o' => $topic['document']]);
 if($doccount == 1) {
+    $uri = $model->getUri($triple['o']['id']);
     $document = new Document();
     $document->setName($folder);
+    $document->setSize($shelf->getFilesize($uri));
+    $status = array_map(function ($u) {return 0;},array_flip([
+        'sha1']));
     $model->searchTriples(
         ['s' => $triple['o']['id']],
-        function ($row) use ($document,$topic) {
+        function ($row) use ($document,$model,$topic,&$status) {
             if($row['o'] == $topic['document']) {
                 $document->setId($row['id']);
             }
+            if($row['p'] == $topic['sha1 digest']) {
+                $status['sha1'] = 1;
+                $document->setHash($model->getSha1($row['o']));
+            }
         });
+    if(!$status['sha1']) {
+        $hash = $shelf->makeHash($uri);
+        $hashid = $model->sha1($hash);
+        $model->triple($triple['o']['id'],$topic['sha1 digest'],$hashid);
+        $document->setHash($hash);
+    }
     echo json_encode($document,JSON_PRETTY_PRINT);
     return;
 }

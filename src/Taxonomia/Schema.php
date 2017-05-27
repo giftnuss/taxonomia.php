@@ -9,6 +9,8 @@ class Schema extends Base
     protected function _construct()
     {
         $this->name = 'taxonomia';
+        $this->withDefaultTypes();
+
         $this->type('id')->int->size(14);
         $this->type('word')->varchar->size(128);
         $this->type('uri')->char->size(4095);
@@ -37,6 +39,10 @@ class Schema extends Base
         $this->table('occurence')
             ->column->id('id')->uri('occurence')
             ->constraint->pk('id');
+
+        $this->table('sha1')
+            ->column->id('id')->digest_sha1('sha1')
+            ->constraint->pk('id')->unique('sha1');
 
         $this->table('term')
             ->column->id('id')->word('term')
@@ -95,6 +101,9 @@ class Schema extends Base
         $none = $model->concept("none");
 
         $model->triple($isa,$every,$language);
+        $model->concept('sha1 digest');
+        $model->concept('title');
+        $model->concept('author');
 
         $db->commit();
     }

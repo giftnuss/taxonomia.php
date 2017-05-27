@@ -12,6 +12,8 @@ class Document implements JsonSerializable
 
     protected $documentTitle = '';
 
+    protected $documentHash = null;
+
     public function setId($id)
     {
         $this->documentId = $id;
@@ -27,15 +29,28 @@ class Document implements JsonSerializable
         $this->documentTitle = $title;
     }
 
+    public function setSize($size)
+    {
+        $this->documentSize = $size;
+    }
+
+    public function setHash($hash)
+    {
+        $this->documentHash = $hash;
+    }
+
     public function jsonSerialize()
     {
         $result = array(
             'type' => 'document',
             'documentId' => $this->documentId,
             'documentName' => $this->documentName,
-            'documentTitle' => $this->documentTitle
+            'documentTitle' => $this->documentTitle,
+            'size' => $this->documentSize
         );
-
+        if($this->documentHash !== null) {
+            $result['hash'] = $this->documentHash;
+        }
         return $result;
     }
 }

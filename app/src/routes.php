@@ -5,12 +5,10 @@ $app->get('/', function ($request, $response, $args) {
     // Sample log message
     $this->logger->info("Run '/' route for "  . $request->getRequestTarget());
     $this->logger->info("Run '/' route for "  . $request->getUri()->getBaseUrl());
-      // var_export($request,true));
 
     $db = $this->db;
     $args['db'] = $db;
 
-    // Render index view
     return $this->renderer->render($response, 'index.phtml', $args);
 });
 
@@ -20,6 +18,8 @@ $app->get('/cty/[{num}]', function ($request, $response, $args) {
     $this->logger->info("Json '/cty' route " . (isset($args['num'])?$args['num']:''));
 
     $args['model'] = $this->model;
+    $args['shelf'] = $this->shelf;
+
     if(empty($args['num'])) {
         $args['num'] = 0;
         return $this->renderer->render($response, "level/{$args['num']}.phtml", $args);
