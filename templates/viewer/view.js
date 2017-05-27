@@ -1,5 +1,24 @@
 
+(function () {
+    var type = '<?php echo $type; ?>',
+      id = '<?php echo $document; ?>';
 
-require(['common/document-viewer'],function () {
+    requirejs.config({
+        paths: {
+            js: '/js'
+        }
+    });
 
-});
+    require(
+       [
+         'common/document-viewer',
+         'common/setup',
+         type + '/register-plugin'
+       ],function (doc, setup, pluginData) {
+         doc.registerPlugin(pluginData);
+         doc.usePlugin(type);
+         doc.setDocumentUrl('/document/' + id);
+
+         doc.render(setup.viewer);
+    });
+})();

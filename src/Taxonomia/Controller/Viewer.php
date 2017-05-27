@@ -30,7 +30,7 @@ class Viewer
    }
 
    public function getFs()
-   {dbg($this->settings);
+   {
        if($this->fs === null) {
            $root = $this->settings['template_path'];
            $local = new Local($root, LOCK_EX, Local::SKIP_LINKS);

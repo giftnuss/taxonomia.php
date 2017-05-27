@@ -49,7 +49,7 @@ $app->get('/document/{num}', function ($request, $response, $args) {
     return $response;
 });
 
-$app->get('/view/{type:[a-z]+}/{arg:.*}', \Taxonomia\Controller\Viewer::class);
+$app->get('/view/{type:[\w-]+}/{arg:.*}', \Taxonomia\Controller\Viewer::class);
 
 $app->get('/view/view.js', function ($request,$response,$args) {
     $args = $request->getQueryParams();
