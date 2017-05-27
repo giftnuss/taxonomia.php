@@ -68,6 +68,8 @@ function hideSpinner(){
         if(data.documentTitle.length > 0) {
             element.append("<div>" + data.documentTitle + "</div>");
         }
+        element.append("<div><a href=\"/document/" + id + "\" target=\"" + id + "\" >builtin pdf reader</a></div>");
+
     }
 
 })(jQuery);
