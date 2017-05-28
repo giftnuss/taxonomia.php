@@ -29,9 +29,12 @@ git clone --depth=1 https://github.com/euske/pdfminer.git
 
 cd pdfminer
 pyinstaller -F tools/pdf2txt.py
+pyinstaller -F tools/dumppdf.py
 
 mkdir -p $pwd/bin
 cp dist/pdf2txt $pwd/bin
-chmod +x $pwd
+cp dist/dumppdf $pwd/bin
+chmod +x $pwd/bin/pdf2txt
+chmod +x $pwd/bin/dumppdf
 
 rm -rf $tempdir

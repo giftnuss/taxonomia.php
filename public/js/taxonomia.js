@@ -73,6 +73,7 @@ function hideSpinner(){
         element.append("<div>Hash: " + data.hash);
         element.append("<div><a href=\"/document/" + id + "\" target=\"" + id + "\" >builtin pdf reader</a></div>");
 
+        //[ach(
     }
 
 })(jQuery);

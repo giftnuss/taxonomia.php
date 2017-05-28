@@ -12,7 +12,11 @@ class Document implements JsonSerializable
 
     protected $documentTitle = '';
 
-    protected $documentHash = null;
+    protected $documentHash;
+
+    protected $documentSize;
+
+    protected $documentAuthor;
 
     public function setId($id)
     {
@@ -39,6 +43,11 @@ class Document implements JsonSerializable
         $this->documentHash = $hash;
     }
 
+    public function setAuthor($author)
+    {
+        $this->documentAuthor = $author;
+    }
+
     public function jsonSerialize()
     {
         $result = array(
@@ -48,8 +57,11 @@ class Document implements JsonSerializable
             'documentTitle' => $this->documentTitle,
             'size' => $this->documentSize
         );
-        if($this->documentHash !== null) {
-            $result['hash'] = $this->documentHash;
+        foreach(['hash','author'] as $attr) {
+            $attribute = 'document' . ucfirst($attr);
+            if($this->$attribute !== null) {
+                $result[$attr] = $this->$attribute;
+            }
         }
         return $result;
     }

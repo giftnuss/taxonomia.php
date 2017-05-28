@@ -124,7 +124,8 @@ class Shelf
 
     public function makeHash($url)
     {
-        $stream = $this->getStream($url);
+        $path = $this->urlToPath($url);
+        $stream = $this->getFilesystem()->readStream($path);
         $hasher = new StreamHasher('sha1');
         return $hasher->hash($stream);
     }
