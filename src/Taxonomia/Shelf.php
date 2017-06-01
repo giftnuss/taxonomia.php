@@ -100,6 +100,11 @@ class Shelf
         return $uri;
     }
 
+    public function getPath($uri)
+    {
+        return substr($this->urlToPath($uri),1);
+    }
+
     protected function urlToPath($url)
     {
         if(strstr($url, 'shelf:///')) {

@@ -31,6 +31,21 @@
 <?php // print_r($db); ?>
 </pre>
 
+<script type="text/template" id="document-details">
+    <% numeral = require("numeral") %>
+    <div id="wrap-<%= id %>" class="document-details">
+        <div>ID: <%= id %></div>
+        <div id="link-<%= id %>" class="link">Filename: <%- name %></div>
+        <div id="text-<%= id %>" class="link">Text <%= id %></div>
+        <% if(title.length > 0) { %>
+            <div><%- title %></div>
+        <% } %>
+        <div>Size: <%= numeral(size).format('0.00ib') %></div>
+        <div>Hash: <%= hash %></div>
+        <div><a href="/document/<%= id %>" target="<%= id %>">builtin pdf reader</a></div>
+    </div>
+</script>
+
 <script type="text/javascript" data-main="main.js" src="./js/require.js"></script>
 
 </body>

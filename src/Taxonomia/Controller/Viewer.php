@@ -44,8 +44,13 @@ class Viewer
        $this->logger->info("Viewer Controller: " . var_export($args,true));
        $this->logger->info("Run 'Viewer' for route "  . $request->getRequestTarget());
        if(is_numeric($args['arg'])) {
-           $renderer = $this->container->get('renderer');
-           return $renderer->render($response, "viewer/pdf/pdf.phtml", $args);
+           if($args['type'] == 'text') {
+               return $this->viewText($response,$args);
+           }
+           else {
+               $renderer = $this->container->get('renderer');
+               return $renderer->render($response, "viewer/pdf/pdf.phtml", $args);
+           }
        }
 
        $file = $args['type'] . '/' . $args['arg'];
@@ -58,6 +63,35 @@ class Viewer
           ->withHeader('Content-Type', $mimetype)
           ->withHeader("Content-Length",$filesize)
           ->withBody($stream);
+       return $response;
+   }
+
+   protected function viewText($response,$args)
+   {
+       $model = $this->container->get('model');
+       $storage = $this->container->get('text_storage');
+
+       $args['triple'] = $triple = $model->getTriple($args['arg']);
+       $model->searchTriples(['s' => $triple['s']['id'],'p' => ['concept' => 'sha1 digest']],
+           function ($row) use ($model,&$args) {
+               $args['hash'] = $model->getSha1($row['o']);
+           });
+
+       if(!$storage->has($args['hash'])) {
+           $shelf = $this->container->get('shelf');
+           $fs = $shelf->getFilesystem();
+           $path = $shelf->getPath($triple['s']['value']);
+           $indexer = new \Taxonomia\Indexer\Pdf($fs,$path);
+           $indexer->setTextConverter('pdf2txt');
+           $indexer->setTempbase('/dev/shm');
+           $indexer->setDebug(true);
+           $storage->store($args['hash'],$indexer->extractText());
+       }
+       $text = $storage->retrieve($args['hash']);
+       $response = $response
+           ->withHeader('Content-Type', 'text/plain')
+           ->withHeader('Content-Length', strlen($text));
+       $response->getBody()->write($text);
        return $response;
    }
 }

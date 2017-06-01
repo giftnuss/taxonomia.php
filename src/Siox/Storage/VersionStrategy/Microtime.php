@@ -15,6 +15,18 @@ class Microtime implements VersionStrategy
         return strrev($c);
     }
 
+    public function sortVersions(&$versions)
+    {
+        return usort($versions, function ($a,$b) {
+            $ad = $this->toDatetime($a);
+            $bd = $this->toDatetime($b);
+            if ($ad == $bd) {
+                return 0;
+            }
+            return $ad < $bd ? -1 : 1;
+        });
+    }
+
     public function toDatetime($str)
     {
         $b36 = strrev($str);

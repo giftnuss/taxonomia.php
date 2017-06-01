@@ -6,7 +6,7 @@ $autoload = require __DIR__ . '/../vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 $autoload->add('Siox\\', array($baseDir.'/src'));
 
-$tempBase = "$baseDir/temp";
+$tempBase = "/dev/shm/temp";
 if(!is_dir($tempBase)) {
     mkdir($tempBase);
 }
@@ -29,7 +29,7 @@ $topic['english']     = $model->entity('english');
 $model->unlockCreation();
 
 $shelf->collectDocuments(function ($shelf,$entry)
-    use($db,$model,$debug,$topic) {
+    use($db,$model,$debug,$topic,$tempBase) {
     $db->beginTransaction();
 
     $uri = $model->uri($shelf->makeUri($entry));
@@ -43,6 +43,8 @@ $shelf->collectDocuments(function ($shelf,$entry)
             $path = $entry['path'];
             $indexer = new Taxonomia\Indexer\Pdf($fs,$path);
             $indexer->setDebug($debug);
+            $indexer->setTextConverter('pdftotext');
+            $indexer->setTempbase($tempBase);
 
             $found = 0;
             $model->searchTriples(['s' => $uri, 'p' => $topic['in language']],

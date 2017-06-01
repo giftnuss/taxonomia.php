@@ -24,6 +24,7 @@ return [
         ],
         'controller' =>[
             'viewer' => [ 'template_path' => realpath(__DIR__ . '/../../templates/viewer') . '/' ]
-        ]
+        ],
+        'text_storage' => dirname(__DIR__) . '/data/texts'
     ],
 ];

@@ -48,17 +48,24 @@ function hideSpinner(){
     });
 
     function display_document(element,data) {
-        var numeral = require("numeral");
         element.empty();
         var id = data.documentId;
-        element.append("<div>" + data.documentId + "</div>");
-        element.append("<div id=\"link-" + id + "\" class=\"link\">" + data.documentName + "</div>");
+        var compiled = _.template($("#document-details").html());
+        element.append(compiled({
+            id: data.documentId,
+            name: data.documentName,
+            title: data.documentTitle,
+            size: data.size,
+            hash: data.hash
+        }));
+
+        // Link to custom pdf viewer (WIP)
         $("#link-" + id).click(function () {
             var extension = data.documentName.split('.').pop().toLowerCase();
             $('.main-tabs').append("<h2>" + data.documentName + "</h2>");
             $('.main-tabs').append("<div id=\"panel-" + id + "\" class=\"panel tabbody\"></div>");
             $('#panel-' + id).append("<iframe src=\"./view/" + extension +
-                "/" + id + "\" allowfullscreen webkitallowfullscreen></iframe>");
+                "/" + id + "\" allowfullscreen></iframe>");
 
             $(".main-tabs").accessibleTabs({
                 tabhead:'h2',
@@ -66,14 +73,19 @@ function hideSpinner(){
                 fxspeed:null
             });
         });
-        if(data.documentTitle.length > 0) {
-            element.append("<div>" + data.documentTitle + "</div>");
-        }
-        element.append("<div>Size: " + numeral(data.size).format('0.00ib'));
-        element.append("<div>Hash: " + data.hash);
-        element.append("<div><a href=\"/document/" + id + "\" target=\"" + id + "\" >builtin pdf reader</a></div>");
 
-        //[ach(
+        // Link to text view
+        $('#text-' + id).click(function () {
+            $('.main-tabs').append("<h2>Text " + id + "</h2>");
+            $('.main-tabs').append("<div id=\"text-panel-" + id + "\" class=\"panel tabbody\"></div>");
+            $('#text-panel-' + id).append("<iframe src=\"./view/text/" + id + "\" allowfullscreen></iframe>");
+
+            $(".main-tabs").accessibleTabs({
+                tabhead:'h2',
+                fx:"show",
+                fxspeed:null
+            });
+        });
     }
 
 })(jQuery);

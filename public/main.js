@@ -9,11 +9,15 @@ requirejs.config({
   }],
   shim: {
     'numeral': { exports: 'numeral' }
+  },
+  paths: {
+    underscore: 'js/underscore',
+    jquery: 'miller/js/jquery'
   }
 });
 
 // Start the main app logic.
-requirejs(['miller/js/jquery',
+requirejs(['jquery','underscore'
 ], function () {
     requirejs(['miller/js/miller','js/jQuery.tabs','numeral'
   ], function () {

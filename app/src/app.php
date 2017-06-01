@@ -1,5 +1,11 @@
 <?php
 
+$basedir = realpath(__DIR__ . '/../..');
+$autoload = require "$basedir/vendor/autoload.php";
+$autoload->add('Siox\\',array($basedir."/src"));
+
+session_start();
+
 // Instantiate the app
 $settings = require __DIR__ . '/settings.php';
 $app = new \Slim\App($settings);

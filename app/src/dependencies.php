@@ -50,3 +50,12 @@ $container['model'] = function ($c) {
     $schema = new Taxonomia\Schema();
     return new Taxonomia\Model($db,$schema);
 };
+
+$container['text_storage'] = function ($c) {
+    $path = $c->get('settings')['text_storage'];
+    if(!is_dir($path)){
+        mkdir($path);
+    }
+    $adapter = new \League\Flysystem\Adapter\Local($path);
+    return new \Siox\Storage\PlainFile($adapter);
+};
