@@ -1,4 +1,21 @@
 
+// please see https://www.youtube.com/watch?v=MJlOVKWBZ6w&t=3326
+function hash_colors(sha1) {
+    var $ = jQuery;
+    var container = $('<div>');
+    for(i = 0; i <3; ++i) {
+        var row = $('<div style="clear:both;">');
+        for(j=0; j<6; ++j) {
+            var color = sha1.substr(i*2+j*6,6);
+            var cell = $("<div style=\"float:left;" +
+               "background-color:#" + color + ";\"></div>");
+            $(cell).width("16.666%").height("3em");
+            row.append(cell);
+        }
+        container.append(row);
+    }
+    return container;
+}
 
 function showSpinner(){
     var spinner = $("<div/>").append($("<div/>").addClass("spinner"));
@@ -41,6 +58,7 @@ function hideSpinner(){
                         }
                         if(back["type"] == 'document') {
                             display_document($('#item-actions-container'),back);
+                            display_tagcloud($('#word-cloud-container'),back);
                         }
                     });
         });
@@ -86,6 +104,20 @@ function hideSpinner(){
                 fxspeed:null
             });
         });
+
+        element.append(hash_colors(data.hash));
+    }
+
+    function display_tagcloud(element,data)
+    {
+        var id = data.documentId;
+        element.empty();
+        var canvas = $('<canvas>');
+        element.append(canvas);
+        jQuery.getJSON( "./view/cloud/" + id,
+            function ( back ) {
+                WordCloud(canvas[0], { list: back } );
+            });
     }
 
 })(jQuery);

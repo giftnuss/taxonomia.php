@@ -1,7 +1,7 @@
 <?php
 
 if (PHP_SAPI == 'cli-server') {
-    // This is required because the builin Server behaves strange under
+    // This is required because the builtin Server behaves strange under
     // some circumctances.
     $_SERVER['SCRIPT_NAME']=basename(__FILE__);
 

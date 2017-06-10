@@ -10,6 +10,8 @@ use League\Flysystem\Adapter\Local;
 
 use GuzzleHttp\Psr7\Stream;
 
+use Taxonomia\Analyse\Wordcloud;
+
 class Viewer
 {
    protected $container;
@@ -46,6 +48,9 @@ class Viewer
        if(is_numeric($args['arg'])) {
            if($args['type'] == 'text') {
                return $this->viewText($response,$args);
+           }
+           elseif($args['type'] == 'cloud') {
+               return $this->viewCloud($response,$args);
            }
            else {
                $renderer = $this->container->get('renderer');
@@ -92,6 +97,23 @@ class Viewer
            ->withHeader('Content-Type', 'text/plain')
            ->withHeader('Content-Length', strlen($text));
        $response->getBody()->write($text);
+       return $response;
+   }
+
+   protected function viewCloud($response,$args)
+   {
+       $model = $this->container->get('model');
+       $args['triple'] = $triple = $model->getTriple($args['arg']);
+       $model->searchTriples(['s' => $triple['s']['id'],'p' => ['concept' => 'in language']],
+           function ($row) use ($model,&$args) {
+               $args['language'] = $model->getEntity($row['o']);
+           });
+
+       $textresponse = $this->viewText($response,$args);
+       $cloudbuilder = (new Wordcloud())->setText($textresponse->getBody());
+       $cloudbuilder->setLanguage($args['language']);
+       $cloud = $cloudbuilder->getCloud();
+       $response = $response->withJson($cloud);
        return $response;
    }
 }

@@ -72,6 +72,7 @@ class Pdf extends Document
         if($text === false) {
             throw new \Exception("Ups, can't convert {$this->path}.");
         }
+	$text = preg_replace("/\n{2,}/sm","\n\n",$text);
         return $text;
     }
 }

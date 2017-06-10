@@ -21,7 +21,7 @@ requirejs(['jquery','underscore'
 ], function () {
     requirejs(['miller/js/miller','js/jQuery.tabs','numeral'
   ], function () {
-      requirejs(['js/taxonomia'
+      requirejs(['js/taxonomia','wordcloud2/src/wordcloud2.js'
     ], function () {
 
     $(document).ready(function(){
@@ -29,18 +29,6 @@ requirejs(['jquery','underscore'
             tabhead:'h2',
             fx:"show",
             fxspeed:null
-        });
-    });
-    $(function () {
-        var num = 1;
-        $('#word-cloud-container').click(function (evt) {
-            $('.main-tabs').append("<h2>Tab-" + num++ + "</h2>");
-            $('.main-tabs').append("<div class=\"panel tabbody\">TEXT</div>");
-            $(".main-tabs").accessibleTabs({
-                tabhead:'h2',
-                fx:"show",
-                fxspeed:null
-            });
         });
     });
 
