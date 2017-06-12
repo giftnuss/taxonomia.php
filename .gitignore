@@ -1,3 +1,6 @@
+.ENV
+bin/dumppdf
+bin/pdf2txt
 *~
 */.git
 logs/
