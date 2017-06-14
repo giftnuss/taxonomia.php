@@ -4,3 +4,6 @@
 [submodule "public/wordcloud2"]
 	path = public/wordcloud2
 	url = https://github.com/timdream/wordcloud2.js.git
+[submodule "public/core"]
+	path = public/core
+	url = https://github.com/giftnuss/frjo.git

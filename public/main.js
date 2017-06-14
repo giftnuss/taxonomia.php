@@ -4,15 +4,15 @@ requirejs.config({
   packages: [{
     name: 'numeral',
     // This location is relative to baseUrl.
-    location: '/js/numeral',
+    location: '/core/js/numeral',
     main: 'numeral'
   }],
   shim: {
     'numeral': { exports: 'numeral' }
   },
   paths: {
-    underscore: 'js/underscore',
-    jquery: 'miller/js/jquery'
+    underscore: 'core/js/underscore',
+    jquery: 'core/js/jquery.min'
   }
 });
 
