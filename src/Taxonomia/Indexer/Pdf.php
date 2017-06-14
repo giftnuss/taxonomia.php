@@ -58,7 +58,7 @@ class Pdf extends Document
         $this->tempdir->runCommand($this->getPdfToTextCommand());
         $file = $this->tempdir->getFilehandle($this->text);
         $text = fread($file , 1024 * 4);
-        fclose($text);
+        fclose($file);
 
         $textcat = new TextCat();
         return $textcat->classify( $text );
@@ -72,7 +72,7 @@ class Pdf extends Document
         if($text === false) {
             throw new \Exception("Ups, can't convert {$this->path}.");
         }
-	$text = preg_replace("/\n{2,}/sm","\n\n",$text);
+        $text = preg_replace("/\n{2,}/sm","\n\n",$text);
         return $text;
     }
 }
