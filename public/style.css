@@ -22,14 +22,16 @@ canvas {
     line-height:normal;
 }
 
-.main-tabs ul.tabs-list {
+.main-tabs ul.tabs-list,
+ul.inner-tabs-list {
     margin:0;
     padding:10px 10px 0;
     list-style:none;
     overflow:hidden;
     border-bottom: 1px solid #DBDBDB;
 }
-.main-tabs ul.tabs-list li {
+.main-tabs ul.tabs-list li,
+ul.inner-tabs-list li {
     float:left;
     margin:0;
     margin-right:0.3em;
@@ -37,7 +39,8 @@ canvas {
     border: 1px solid #DBDBDB;
     border-bottom: 0px;
 }
-.main-tabs ul.tabs-list a {
+.main-tabs ul.tabs-list a,
+ul.inner-tabs-list a {
     float:none;
     display:block;
     padding:5px 15px 4px 6px;
@@ -45,17 +48,21 @@ canvas {
     font-weight:bold;
     color:#000;
 }
-.main-tabs ul.tabs-list a:hover {
+.main-tabs ul.tabs-list a:hover,
+ul.inner-tabs-list a:hover {
     color:#333;
 }
-.main-tabs ul.tabs-list .current {
+.main-tabs ul.tabs-list .current,
+ul.inner-tabs-list .current{
     border-width:2px;
 }
-.main-tabs ul.tabs-list .current a {
+.main-tabs ul.tabs-list .current a,
+ul.inner-tabs-list .current a {
     color:#333;
     padding-bottom:5px;
 }
-.main-tabs ul.tabs-list span.current-info {
+.main-tabs ul.tabs-list span.current-info,
+ul.inner-tabs-list span.current-info {
     visibility: hidden;
     display: none;
 }
@@ -113,5 +120,12 @@ h2.tabhead:focus {
 #item-actions-container {
     float: right;
 }
-
-
+/***************************************
+ *             Wordcloud               *
+ ***************************************/
+#word-cloud-container h3.tabhead {
+   display: none;
+   height:0px;
+   margin:0px;
+   visibility: hidden;
+}

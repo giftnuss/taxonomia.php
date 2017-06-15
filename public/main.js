@@ -19,9 +19,9 @@ requirejs.config({
 // Start the main app logic.
 requirejs(['jquery','underscore'
 ], function () {
-    requirejs(['miller/js/miller','js/jQuery.tabs','numeral'
+    requirejs(['miller/js/miller','js/jQuery.tabs'
   ], function () {
-      requirejs(['js/taxonomia','wordcloud2/src/wordcloud2.js'
+      requirejs(['js/taxonomia'
     ], function () {
 
     $(document).ready(function(){
@@ -31,5 +31,6 @@ requirejs(['jquery','underscore'
             fxspeed:null
         });
     });
+    requirejs(['numeral','wordcloud2/src/wordcloud2','js/jsonTable']);
 
 }); }); });

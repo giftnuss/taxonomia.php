@@ -112,11 +112,31 @@ function hideSpinner(){
     {
         var id = data.documentId;
         element.empty();
-        var canvas = $('<canvas>');
-        element.append(canvas);
+
+        var compiled = _.template($("#tagcloud-details").html());
+        var html = compiled({});
+        element.append(html);
+        element.accessibleTabs({
+                tabhead:'h3',
+                fx:"show",
+                fxspeed:null,
+                // important to distinguish the tabs - but needs additional styling work
+                tabsListClass: 'inner-tabs-list',
+                tabbody: '.inner-tabbody'
+        });
+
+        var canvas = $('canvas',element);
+        var wordlist = $('.wordlist');
         jQuery.getJSON( "./view/cloud/" + id,
             function ( back ) {
                 WordCloud(canvas[0], { list: back } );
+                var table = $('<table>');
+                table.jsonTable({
+                    head: ['word','count'],
+                    json: [0,1]
+                });
+                table.jsonTableUpdate({source: back});
+                wordlist.append(table);
             });
     }
 
