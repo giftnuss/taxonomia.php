@@ -5,7 +5,7 @@
 
     requirejs.config({
         paths: {
-            js: '/js'
+            js: '/core/js'
         }
     });
 
