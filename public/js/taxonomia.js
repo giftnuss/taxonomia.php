@@ -96,7 +96,7 @@ function hideSpinner(){
         $('#text-' + id).click(function () {
             $('.main-tabs').append("<h2>Text " + id + "</h2>");
             $('.main-tabs').append("<div id=\"text-panel-" + id + "\" class=\"panel tabbody\"></div>");
-            $('#text-panel-' + id).append("<iframe src=\"./view/text/" + id + "\" allowfullscreen></iframe>");
+            $('#text-panel-' + id).append("<iframe src=\"./view/markitup/" + id + "\" allowfullscreen></iframe>");
 
             $(".main-tabs").accessibleTabs({
                 tabhead:'h2',
@@ -129,7 +129,7 @@ function hideSpinner(){
         var wordlist = $('.wordlist');
         jQuery.getJSON( "./view/cloud/" + id,
             function ( back ) {
-                WordCloud(canvas[0], { list: back } );
+                WordCloud(canvas[0], { list: tagcloud_normalize(back) } );
                 var table = $('<table>');
                 table.jsonTable({
                     head: ['word','count'],
@@ -138,6 +138,36 @@ function hideSpinner(){
                 table.jsonTableUpdate({source: back});
                 wordlist.append(table);
             });
+    }
+
+    /**
+     * Tagcloud works when values are between 5 and 55.
+     */
+    function tagcloud_normalize(data)
+    {
+        var normalized = [];
+        var low = data[data.length-1][1];
+        var high = data[0][1];
+
+        var diff = (high-low) / 50;
+        var value = 50;
+        var index = 0;
+        while(value > 0) {
+            var high = high-diff;
+            var i=index;
+            for(; i<data.length; ++i) {
+                if(data[i][1] >= high) {
+                    var arr = [data[i][0], value+5];
+                    normalized.push(arr);
+                }
+                else {
+                    break;
+                }
+            }
+            index = i;
+            value--;
+        }
+        return normalized;
     }
 
 })(jQuery);

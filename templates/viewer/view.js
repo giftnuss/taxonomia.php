@@ -17,8 +17,12 @@
        ],function (doc, setup, pluginData) {
          doc.registerPlugin(pluginData);
          doc.usePlugin(type);
-         doc.setDocumentUrl('/document/' + id);
-
+         if(type === 'markitup') {
+             doc.setDocumentUrl('/view/text/' + id);
+         }
+         else {
+             doc.setDocumentUrl('/document/' + id);
+         }
          doc.render(setup.viewer);
     });
 })();

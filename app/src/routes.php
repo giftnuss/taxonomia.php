@@ -55,3 +55,5 @@ $app->get('/view/view.js', function ($request,$response,$args) {
     $args = $request->getQueryParams();
     return $this->renderer->render($response, "viewer/view.js", $args);
 });
+
+$app->post('/save/{type:[\w-]+}/{arg:.*}', \Taxonomia\Controller\Saver::class);

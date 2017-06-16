@@ -49,6 +49,10 @@ class Viewer
            if($args['type'] == 'text') {
                return $this->viewText($response,$args);
            }
+           elseif($args['type'] == 'markitup') {
+                $renderer = $this->container->get('renderer');
+                return $renderer->render($response, "viewer/markitup/markitup.phtml", $args);
+           }
            elseif($args['type'] == 'cloud') {
                return $this->viewCloud($response,$args);
            }

@@ -61,6 +61,9 @@ class PlainFile implements Storage
          $filepath = "$path/$version";
          $head = $this->headPath($key);
          $this->filesystem->write($filepath,$value);
+         if($this->filesystem->has($head)) {
+             $this->filesystem->delete($head);
+         }
          $this->filesystem->copy($filepath,$head);
      }
 

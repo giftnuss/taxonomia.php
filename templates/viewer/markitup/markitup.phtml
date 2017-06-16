@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>MarkItUp!</title>
+    <link rel="stylesheet" type="text/css" href="markitup.css">
+</head>
+<body>
+    <div id="canvasContainer">
+        <textarea id="markitup"></textarea>
+    </div>
+
+    <div id="overlayCloseButton" class="no-print">
+        &#10006;
+    </div>
+    <div id="dialogOverlay" class="no-print"></div>
+    <div id="blanked" class="no-print"></div>
+    <script data-main="../view.js?document=<?php echo $arg ?>&amp;type=<?php echo $type ?>" src="/core/js/require.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>

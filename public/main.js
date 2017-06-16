@@ -12,7 +12,8 @@ requirejs.config({
   },
   paths: {
     underscore: 'core/js/underscore',
-    jquery: 'core/js/jquery.min'
+    jquery: 'core/js/jquery.min',
+    markitup: 'core/js/markitup'
   }
 });
 
@@ -31,6 +32,15 @@ requirejs(['jquery','underscore'
             fxspeed:null
         });
     });
-    requirejs(['numeral','wordcloud2/src/wordcloud2','js/jsonTable']);
-
+    requirejs([
+        'numeral',
+        'wordcloud2/src/wordcloud2',
+        'js/jsonTable',
+        'markitup'
+    ],function () {
+        $(function () {
+            var src = '/core/css/markitup.css';
+            $("head").append($("<link rel='stylesheet' href='"+src+"' type='text/css' media='screen' />"));
+        });
+    });
 }); }); });
